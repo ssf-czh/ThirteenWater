@@ -1,5 +1,8 @@
 package com.czh;
 
+import com.czh.pojo.Card;
+import com.czh.pojo.Player;
+import com.czh.pojo.Resp;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.junit.Test;
@@ -18,9 +21,27 @@ import java.util.Map;
 public class HttpTest {
 
     private String token;
-
+    private int id;
+    private String cards;
 
     @Test
+    public void TestAll(){
+        testLogin("czh","czh");
+        testOpenBattle(token);
+        testHandin(token,id);
+        testLogin("po1","123");
+        testOpenBattle(token);
+        testHandin(token,id);
+        testLogin("po2","123");
+        testOpenBattle(token);
+        testHandin(token,id);
+        testLogin("po3","123");
+        testOpenBattle(token);
+        testHandin(token,id);
+
+    }
+
+//    @Test
     public void testGet() {
         try {
 
@@ -51,8 +72,8 @@ public class HttpTest {
      * Post
      * 对登入接口的单元测试
      */
-    @Test
-    public void testLogin() {
+//    @Test
+    public void testLogin(String username,String password) {
         try {
 //            URL url = new URL(uri + "/test2");
             URL url = new URL("https://api.shisanshui.rtxux.xyz/auth/login");
@@ -66,8 +87,8 @@ public class HttpTest {
 
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> data = new HashMap<String, Object>();
-            data.put("username", "czh");
-            data.put("password", "czh");
+            data.put("username", username);
+            data.put("password", password);
             PrintWriter pw = new PrintWriter(new BufferedOutputStream(connection.getOutputStream()));
             pw.write(objectMapper.writeValueAsString(data));
             pw.flush();
@@ -102,11 +123,11 @@ public class HttpTest {
      * Post
      * 对开启战局的单元测试
      */
-    @Test
-    public void testOpenBattle(){
+//    @Test
+    public void testOpenBattle(String token){
         try {
 //            URL url = new URL(uri + "/test2");
-            token = "e105ee38-91dc-4d3e-8a39-e0a76e02dae1";
+//            token = "e105ee38-91dc-4d3e-8a39-e0a76e02dae1";
             URL url = new URL("https://api.shisanshui.rtxux.xyz/game/open");
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -143,9 +164,11 @@ public class HttpTest {
 
             System.out.println(map);
 
-            double id = (double) ((Map) map.get("data")).get("id");
-            System.out.println((int)id);
+            double temp = (double) ((Map) map.get("data")).get("id");
+            id = (int) temp;
+            System.out.println(id);
 
+            cards = (String) ((Map) map.get("data")).get("card");
 
 
         } catch (Exception e) {
@@ -168,12 +191,12 @@ public class HttpTest {
      *   ]
      * }
      */
-    @Test
-    public void TestHandin(){
+//    @Test
+    public void testHandin(String token, int id){
         try {
 //            URL url = new URL(uri + "/test2");
-            Integer id = 5096;
-            token = "e105ee38-91dc-4d3e-8a39-e0a76e02dae1";
+//            Integer id = 5096;
+//            token = "e105ee38-91dc-4d3e-8a39-e0a76e02dae1";
             URL url = new URL("https://api.shisanshui.rtxux.xyz/game/submit");
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -188,11 +211,14 @@ public class HttpTest {
 
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> data = new HashMap<String, Object>();
-            List<String> card = new ArrayList<>();
-            card.add("$4 $5 $7");
-            card.add("#8 #J $A *2 *3");
-            card.add("&5 &6 &7 &8 &K");
 
+            List<String> card = zuPai();
+//            List<String> card = new ArrayList<>();
+//
+//            card.add("$4 $5 $7");
+//            card.add("#8 #J $A *2 *3");
+//            card.add("&5 &6 &7 &8 &K");
+            System.out.println(card);
             data.put("id", id);
             data.put("card", card);
             PrintWriter pw = new PrintWriter(new BufferedOutputStream(connection.getOutputStream()));
@@ -222,6 +248,91 @@ public class HttpTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<String> zuPai(){
+        String s = cards;
+        System.out.println(s);
+
+        List<Card> handCard = new ArrayList<Card>();
+
+
+        String[] s1 = s.split(" ");
+
+        // 花色1-4代表四种花色（♥，♣，♦，♠）
+        // Rank 1-13表示牌的大小（2，3，4……，K,  A）
+
+        for (String s2 : s1) {
+            int type;
+            int t;
+            char ch1 = s2.charAt(0);
+            char ch2 = s2.charAt(1);
+            if('$'==ch1)type=4;
+            else if('&'==ch1)type=1;
+            else if('*'==ch1)type=2;
+            else type=3;
+            if('2'<=ch2 && ch2<='9')
+            {
+                t = ch2 - '0' -1;
+            }else if(ch2 == 'A') t = 13;
+            else if(ch2 == 'K') t = 12;
+            else if(ch2 == 'Q') t = 11;
+            else if(ch2 == 'J') t= 10;
+            else t = 9;
+            handCard.add(new Card(t,type));
+//            System.out.println(t+"-"+type);
+        }
+
+        Player p=new Player();
+        p.change(handCard);
+        ArrayList<Card> newHandCard = new ArrayList<>();
+
+        for (Card card : p.choice.head) {
+//            System.out.println(card);
+            newHandCard.add(card);
+        }
+
+        for (Card card : p.choice.mid) {
+//            System.out.println(card);
+            newHandCard.add(card);
+        }
+
+        for (Card card : p.choice.end) {
+//            System.out.println(card);
+            newHandCard.add(card);
+        }
+
+        String res = p.toString(newHandCard);
+
+//        System.out.println(res);
+        // 花色1-4代表四种花色（♥，♣，♦，♠）
+        String temp = res.replace("♥","&").replace("♣","*").replace("♦","#").replace("♠","$");
+
+
+        String[] s2 = temp.split(" ");
+
+        String shang = "";
+        for (int i = 0; i <3 ; i++) {
+            shang += s2[i];
+            if(i!=2)shang+=" ";
+        }
+        String zhong = "";
+        for (int i = 3; i <8 ; i++) {
+            zhong += s2[i];
+            if(i!=7)zhong+=" ";
+        }
+        String xia = "";
+        for (int i = 8; i <13 ; i++) {
+            xia += s2[i];
+            if(i!=12)xia+=" ";
+        }
+
+
+        ArrayList<String> card = new ArrayList<String>();
+        card.add(shang);
+        card.add(zhong);
+        card.add(xia);
+        return card;
     }
 
 }

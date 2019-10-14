@@ -17,7 +17,6 @@ public class AlgorithmTest {
         // Rank 1-13表示牌的大小（2，3，4……，K,  A）
 
 
-
 //        #2 #4 $10 *3 $3 #5 *5 #A *8 &9 $A &7 *Q
 //        String s = "$9 $2 #7 *A *10 $Q $3 &J #4 #10 &4 *6 #Q";
 
