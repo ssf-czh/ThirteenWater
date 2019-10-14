@@ -1296,13 +1296,18 @@ public class Player implements FinalTest
 				   choice.mid.add(arr.ranknum1.get(1));
 				   choice.midType="liangdui";
 			   }
-			   else if(arr.ranknum2.size()>=6)
-			   {
-				   choice.mid.addAll(arr.ranknum2.subList(2, 4));
-				   choice.mid.addAll(arr.ranknum1.subList(1, 4));
-				   choice.midType="liangdui";
-			   }
+               else if(arr.ranknum2.size()==6 || arr.ranknum2.size()==8)
+               {
+                   if (arr.ranknum2.size()==6) {
+                       choice.mid.addAll(arr.ranknum2.subList(0, 2));
+                       choice.mid.addAll(arr.ranknum1.subList(1, 4));
+                       choice.midType="liangdui";
+                   } else {
+                       choice.mid.addAll(arr.ranknum2.subList(0, 4));
+                       choice.mid.add(arr.ranknum1.get(1));
+                   }
 
+               }
 			   else if(arr.ranknum2.size()==4)
 			   {
 				   choice.mid.addAll(arr.ranknum1.subList(arr.ranknum1.size()-3, arr.ranknum1.size()));
