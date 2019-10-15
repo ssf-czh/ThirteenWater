@@ -26,16 +26,43 @@ public class HttpTest {
 
     @Test
     public void TestAll(){
-        testLogin("czh","czh");
-        testOpenBattle(token);
-        testHandin(token,id);
+        System.out.println("=============================");
+
         testLogin("po1","123");
         testOpenBattle(token);
         testHandin(token,id);
+        System.out.println("=============================");
         testLogin("po2","123");
         testOpenBattle(token);
         testHandin(token,id);
+        System.out.println("=============================");
         testLogin("po3","123");
+        testOpenBattle(token);
+        testHandin(token,id);
+        System.out.println("=============================");
+        testLogin("test8","test8");
+        testOpenBattle(token);
+        testHandin(token,id);
+//        for (int i = 0; i <20 ; i++) {
+//            System.out.println("=============czh==============");
+//            try {
+//                testLogin("czh","czh");
+//                testOpenBattle(token);
+//                testHandin(token,id);
+//            } catch (Exception e) {
+//                System.out.println(e);
+//            }
+//        }
+        System.out.println("=============================");
+        testLogin("po4","123");
+        testOpenBattle(token);
+        testHandin(token,id);
+        System.out.println("=============================");
+        testLogin("po5","123");
+        testOpenBattle(token);
+        testHandin(token,id);
+        System.out.println("=============================");
+        testLogin("test","test");
         testOpenBattle(token);
         testHandin(token,id);
 
@@ -73,6 +100,7 @@ public class HttpTest {
      * 对登入接口的单元测试
      */
 //    @Test
+//    public void testLogin() {
     public void testLogin(String username,String password) {
         try {
 //            URL url = new URL(uri + "/test2");
@@ -87,6 +115,8 @@ public class HttpTest {
 
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> data = new HashMap<String, Object>();
+//            data.put("username", "test");
+//            data.put("password", "test");
             data.put("username", username);
             data.put("password", password);
             PrintWriter pw = new PrintWriter(new BufferedOutputStream(connection.getOutputStream()));
@@ -107,9 +137,10 @@ public class HttpTest {
             Gson gson = new Gson();
             Map<String, Object> map = new HashMap<String, Object>();
             map = gson.fromJson(result.toString(), map.getClass());
+//            System.out.println(map);
 
             token = (String) ((Map) map.get("data")).get("token");
-            System.out.println(token);
+//            System.out.println("token:" +token);
 
 
 
@@ -124,10 +155,11 @@ public class HttpTest {
      * 对开启战局的单元测试
      */
 //    @Test
+//    public void testOpenBattle(){
     public void testOpenBattle(String token){
         try {
 //            URL url = new URL(uri + "/test2");
-//            token = "e105ee38-91dc-4d3e-8a39-e0a76e02dae1";
+//            token = "5e6883ab-5d54-43de-9344-960ecc3311e7";
             URL url = new URL("https://api.shisanshui.rtxux.xyz/game/open");
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -136,7 +168,7 @@ public class HttpTest {
             connection.setDoOutput(true); // 设置该连接是可以输出的
             connection.setRequestMethod("POST"); // 设置请求方式
             connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-            System.out.println(token);
+//            System.out.println(token);
             connection.setRequestProperty("X-Auth-Token", token);
 
             ObjectMapper objectMapper = new ObjectMapper();
@@ -162,7 +194,7 @@ public class HttpTest {
             Map<String, Object> map = new HashMap<String, Object>();
             map = gson.fromJson(result.toString(), map.getClass());
 
-            System.out.println(map);
+//            System.out.println(map);
 
             double temp = (double) ((Map) map.get("data")).get("id");
             id = (int) temp;
@@ -192,11 +224,12 @@ public class HttpTest {
      * }
      */
 //    @Test
+//    public void testHandin(){
     public void testHandin(String token, int id){
         try {
 //            URL url = new URL(uri + "/test2");
-//            Integer id = 5096;
-//            token = "e105ee38-91dc-4d3e-8a39-e0a76e02dae1";
+//            Integer id = 12877;
+//            token = "5e6883ab-5d54-43de-9344-960ecc3311e7";
             URL url = new URL("https://api.shisanshui.rtxux.xyz/game/submit");
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -215,9 +248,9 @@ public class HttpTest {
             List<String> card = zuPai();
 //            List<String> card = new ArrayList<>();
 //
-//            card.add("$4 $5 $7");
-//            card.add("#8 #J $A *2 *3");
-//            card.add("&5 &6 &7 &8 &K");
+//            card.add("$J $6 $10");
+//            card.add("*Q #5 &9 *J &6");
+//            card.add("#A &A $K &Q *2");
             System.out.println(card);
             data.put("id", id);
             data.put("card", card);
@@ -252,7 +285,7 @@ public class HttpTest {
 
     public List<String> zuPai(){
         String s = cards;
-        System.out.println(s);
+//        System.out.println(s);
 
         List<Card> handCard = new ArrayList<Card>();
 

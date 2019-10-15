@@ -3,11 +3,14 @@ package com.czh;
 import com.czh.pojo.Card;
 import com.czh.pojo.Player;
 import com.czh.pojo.Resp;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 public class AlgorithmTest {
 
@@ -88,6 +91,8 @@ public class AlgorithmTest {
     @Test
     public void TestShiSanShui(){
 
+
+
 //        $8 &7
 //          *10 #10
 //        *5 #5
@@ -118,7 +123,6 @@ public class AlgorithmTest {
 
 
         String[] s1 = s.split(" ");
-
 
         // 花色1-4代表四种花色（♥，♣，♦，♠）
         // Rank 1-13表示牌的大小（2，3，4……，K,  A）
@@ -169,12 +173,13 @@ public class AlgorithmTest {
 //            System.out.println(card);
             newHandCard.add(card);
         }
-
         String res = p.toString(newHandCard);
 
         String temp = res.replace("♥","&").replace("♣","*").replace("♦","#").replace("♠","$");
 
-        System.out.println(temp);
+        Assert.assertEquals("$9 &J *A &4 #4 $3 *6 #7 *10 #10 #Q $Q $2 ",temp);
+
+//        System.out.println(temp);
 
 
     }
