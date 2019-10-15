@@ -22,20 +22,23 @@ import java.util.Map;
 @RestController
 public class GetHanderCardController {
 
-    private static String token;
-    private static int id;
-    private static String cards;
+//    private static String token;
+//    private static int id;
+//    private static String cards;
     private static Boolean isBattle=false;
+
+
 
     @RequestMapping(value = "/getCards",method = {RequestMethod.POST})
     public Resp getCards(Rqst rqst){
 
+
         String s = rqst.getCard();
-        System.out.println(rqst);
+//        System.out.println(rqst);
         //        s = "*2 *3 *4 #5 *6 *7 #8 #9 *10 *J *Q *K *A";
         //        s = "&2 $2 $3 &4 &6 #6 *A &K $K #4 *4 $A &A";
 
-        System.out.println(s);
+//        System.out.println(s);
 
         List<Card> handCard = new ArrayList<Card>();
 
@@ -123,22 +126,89 @@ public class GetHanderCardController {
     }
 
 
-    @RequestMapping(value = "/openAutoBattle")
+    @RequestMapping(value = "/openAutoBattle1")
     public String openAutoBattle(){
 
-        if(isBattle)return "已经开启自动出牌";
+//        if(isBattle)return "已经开启自动出牌";
         isBattle = true;
         int count = 0;
         while(isBattle){
             System.out.println("=============czh=============="+(++count));
             try {
-                login("czh","czh");
-                openBattle(token);
-                handin(token,id);
+                String token = login("czh","czh");
+                List<Object> list = openBattle(token);
+                int id = (int)list.get(0);
+                String cards = (String) list.get(1);
+                handin(token,id,cards);
             } catch (Exception e) {
                 System.out.println(e);
             }
 
+        }
+        return "自动出牌停止";
+    }
+
+    @RequestMapping(value = "/openAutoBattle2")
+    public String openAutoBattle1(){
+
+//        if(isBattle)return "已经开启自动出牌";
+        isBattle = true;
+        int count = 0;
+        while(isBattle){
+            System.out.println("=============po1=============="+(++count));
+            try {
+                String token = login("po1","123");
+                List<Object> list = openBattle(token);
+                int id = (int)list.get(0);
+                String cards = (String) list.get(1);
+                handin(token,id,cards);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+        }
+        return "自动出牌停止";
+    }
+
+    @RequestMapping(value = "/openAutoBattle3")
+    public String openAutoBattle2(){
+
+//        if(isBattle)return "已经开启自动出牌";
+        isBattle = true;
+        int count = 0;
+        while(isBattle){
+            System.out.println("=============po2=============="+(++count));
+            try {
+                String token = login("po2","123");
+                List<Object> list = openBattle(token);
+                int id = (int)list.get(0);
+                String cards = (String) list.get(1);
+                handin(token,id,cards);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+        }
+        return "自动出牌停止";
+    }
+
+    @RequestMapping(value = "/openAutoBattle4")
+    public String openAutoBattle3(){
+
+        if(isBattle)return "已经开启自动出牌";
+        isBattle = true;
+        int count = 0;
+        while(isBattle){
+            System.out.println("=============po3=============="+(++count));
+            try {
+                String token = login("po3","123");
+                List<Object> list = openBattle(token);
+                int id = (int)list.get(0);
+                String cards = (String) list.get(1);
+                handin(token,id,cards);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
         return "自动出牌停止";
     }
@@ -156,7 +226,8 @@ public class GetHanderCardController {
         return rqst;
     }
 
-    public static void login(String username,String password) {
+    public static String login(String username, String password) {
+        String token =null;
         try {
 //            URL url = new URL(uri + "/test2");
             URL url = new URL("https://api.shisanshui.rtxux.xyz/auth/login");
@@ -202,9 +273,11 @@ public class GetHanderCardController {
         } catch (Exception e) {
             System.out.println(e);
         }
+        return token;
     }
 
-    public static void openBattle(String token){
+    public static List<Object> openBattle(String token){
+        List<Object> list = new ArrayList<>();
         try {
 //            URL url = new URL(uri + "/test2");
 //            token = "5e6883ab-5d54-43de-9344-960ecc3311e7";
@@ -236,27 +309,28 @@ public class GetHanderCardController {
             }
             connection.disconnect();
 
-            System.out.println(result.toString());
+//            System.out.println(result.toString());
 
             Gson gson = new Gson();
             Map<String, Object> map = new HashMap<String, Object>();
             map = gson.fromJson(result.toString(), map.getClass());
 
-//            System.out.println(map);
+            System.out.println(map);
 
             double temp = (double) ((Map) map.get("data")).get("id");
-            id = (int) temp;
-            System.out.println(id);
+            list.add((int) temp);
 
-            cards = (String) ((Map) map.get("data")).get("card");
+            list.add((String) ((Map) map.get("data")).get("card"));
 
 
         } catch (Exception e) {
             System.out.println(e);
         }
+
+        return list;
     }
 
-    public static void handin(String token, int id){
+    public static void handin(String token, int id, String cards){
         try {
 //            URL url = new URL(uri + "/test2");
 //            Integer id = 12877;
@@ -276,7 +350,7 @@ public class GetHanderCardController {
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> data = new HashMap<String, Object>();
 
-            List<String> card = zuPai();
+            List<String> card = zuPai(cards);
 //            List<String> card = new ArrayList<>();
 //
 //            card.add("$J $6 $10");
@@ -314,7 +388,7 @@ public class GetHanderCardController {
         }
     }
 
-    public static List<String> zuPai(){
+    public static List<String> zuPai(String cards){
         try {
             String s = cards;
 //        System.out.println(s);
