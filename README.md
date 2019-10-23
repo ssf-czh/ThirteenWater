@@ -8,14 +8,15 @@
 ## 这是一个包含十三水最优解的算法和网络发送请求的项目
 
 ### 技术栈(Technologies)
-    Java 8
-    IDE IJ 2019 
+    Java 9
+    Idea 
+    Maven
     
 ### 项目类说明
     Main 负责调配全局，包括开启网络申请
-    SSS  负责得到一个指定后墩的最优解
-    API  负责网络申请的方式
-    others 负责接收网络请求返回体或者发送题
+    Algo  负责得到一个指定后墩的最优解
+    Request  负责网络申请的方式
+    Receive 负责接收网络请求返回体或者发送题
 ### 启动(Launch or Setup)
     在build.gradle中添加依赖：
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
