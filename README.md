@@ -7,10 +7,11 @@
 [![Build Status](https://travis-ci.org/847001315/Water.svg?branch=master)](https://travis-ci.org/847001315/Water)
 ## 这是一个包含十三水最优解的算法和网络发送请求的项目
 
-### 技术栈(Technologies)
+### 编译环境(Technologies)
     Java 9
     Idea 
     Maven
+    win10
     
 ### 项目类说明
     Main 负责调配全局，包括开启网络申请
