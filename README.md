@@ -31,7 +31,7 @@
 ### 功能特性(Features)
     当前仅支持得到一副牌后输出最优解
 
-### 代码示例(Code Examples)
+### 运行方法(Code Examples)
     在添加完依赖库之后，可以建立一个接口（详细可以看代码中的API和Main类）
     接口中写上：
     
@@ -74,4 +74,4 @@
     http://docs.shisanshui.rtxux.xyz/
 
 ### 联系(Contact)
-    菜鸡不配有姓名
+    溜了溜了
